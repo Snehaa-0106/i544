@@ -69,7 +69,11 @@ function items(tag, meta, path, $element) {
 }
 
 /************************** Event Handlers *****************************/
+function optionstag(meta,i){
+  const $opt = makeElement("option",{"value" : meta.items[i].key}).text(meta.items[i].text)
+  return $opt
 
+}
 //@TODO
 
 /********************** Type Routine Common Handling *******************/
@@ -104,6 +108,37 @@ function header(meta, path, $element) {
 
 function input(meta, path, $element) {
   //@TODO
+  //console.log(meta.attr)
+  const id = makeId(path)
+  var req;
+  if(meta.required == true){
+    req = meta.text+"*"
+  }
+  else{
+    req = meta.text
+  }
+  const $label = makeElement("label",{for:id}).text(req)
+  $element.append($label)
+  const $div = makeElement("div",{})
+  var typedef={}
+  if(meta.subType === undefined){
+    typedef["type"] = 'text'
+  }
+  else{
+    typedef["type"] = meta.subType
+  }
+  
+  Object.assign(meta.attr,{"id":id,type:typedef["type"]})
+  const $inp = makeElement("input",meta.attr)
+  
+  
+  const $diver = makeElement("div",{"class":"error","id":id+"-err"})
+  $div.append($inp)
+  $div.append($diver)
+  $element.append($div)  
+
+ 
+
 }
 
 function link(meta, path, $element) {
@@ -131,10 +166,69 @@ function segment(meta, path, $element) {
 
 function submit(meta, path, $element) {
   //@TODO
+  const $div = makeElement("div",{})
+  $element.append($div)
+
+  let sub = Object.assign({},meta.attr,{type:"submit"})
+  if(meta.text !==undefined) {
+    var $button = makeElement("button",sub).text(meta.text)
+  }
+  else{
+    var $button = makeElement("button",sub).text("submit")
+  }
+
+  //console.log(meta.text)
+  $element.append($button)
+  
 }
 
 function uniSelect(meta, path, $element) {
   //@TODO
+  
+  var id = makeId(path)
+  var req;
+  if(meta.required == true){
+    req = meta.text+"*"
+  }
+  else{
+    req = meta.text
+  }
+  
+  const $label = makeElement("label",{for:id}).text(req)
+  $element.append($label)
+  const $div = makeElement("div",{})
+  console.log(meta.items.length)
+  if (meta.items.length > (N_UNI_SELECT || 4)){
+    const $select = makeElement("select",meta.attr)
+    let i=0
+    while(i<meta.items.length){
+      let $opt = optionstag(meta,i)
+      $select.append($opt)
+      i++
+    }
+    $div.append($select)
+  } 
+  else {
+    const $classdiv = makeElement('div',{"class":"fieldset"})
+    var atrrs = [];
+    for(let i=0; i<meta.items.length; i++){
+
+      atrrs["id"] = id+"-"+i
+      atrrs["type"] = "radio"
+      atrrs["values"] = meta.items[i].key
+      Object.assign(meta.attr,atrrs)
+
+      const $label = makeElement('label',{"for":id}).text(meta.items[i].key)
+      const $radio_input = makeElement('input',meta.attr)
+      $classdiv.append($label)
+      $classdiv.append($radio_input)
+    }
+    $div.append($classdiv)
+  }
+  // const $select = makeElement("select",meta.attr)
+  $element.append($div)
+  
+
 }
 
 
