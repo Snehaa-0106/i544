@@ -150,6 +150,51 @@ function link(meta, path, $element) {
 
 function multiSelect(meta, path, $element) {
   //@TODO
+   
+  var id = makeId(path)
+  var req;
+  if(meta.required == true){
+    req = meta.text+"*"
+  }
+  else{
+    req = meta.text
+  }
+  
+  const $label = makeElement("label",{for:id}).text(req)
+  $element.append($label)
+  const $div = makeElement("div",{})
+  console.log(meta.items.length)
+  if (meta.items.length > (N_UNI_SELECT || 4)){
+    Object.assign(meta.attr,{multiple:"multiple"})
+    const $select = makeElement("select",meta.attr)
+    let i=0
+    while(i<meta.items.length){
+      let $opt = optionstag(meta,i)
+      $select.append($opt)
+      i++
+    }
+    $div.append($select)
+  } 
+  else {
+    const $classdiv = makeElement('div',{"class":"fieldset"})
+    var atrrs = [];
+    for(let i=0; i<meta.items.length; i++){
+
+      atrrs["id"] = id+"-"+i
+      atrrs["type"] = "checkbox"
+      atrrs["values"] = meta.items[i].key
+      Object.assign(meta.attr,atrrs)
+
+      const $label = makeElement('label',{"for":id}).text(meta.items[i].key)
+      const $checkbox = makeElement('input',meta.attr)
+      $classdiv.append($label)
+      $classdiv.append($checkbox)
+    }
+    $div.append($classdiv)
+  }
+  // const $select = makeElement("select",meta.attr)
+  $element.append($div)
+  
 }
 
 function para(meta, path, $element) { items('p', meta, path, $element); }
