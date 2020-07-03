@@ -152,10 +152,31 @@ function input(meta, path, $element) {
   const $diver = makeElement("div",{"class":"error","id":id+"-err"})
   $div.append($inp)
   $div.append($diver)
-  $element.append($div)  
+  $div.append($inp);
+  if(meta.required){
+    const $errorDiv = makeElement('div',{"class":"error","id":path+"-err"})
+    $div.append($errorDiv);
+    $inp.blur(function () {
+      onBlurOfReqdInput(this,meta);
+    });
+  }
 
- 
+  $element.append($div)
+}
+  //$element.append($div)  
 
+
+function onBlurOfReqdInput(ele,meta)
+{
+  if($(ele).val().trim())
+  {
+    $(ele).next().text("");
+  }
+  else
+  {
+    $(ele).next().text("The field"+meta.text+" must be specified.");
+    //console.log(meta.errMsgFn(Event,meta))
+  }
 }
 
 function link(meta, path, $element) {
@@ -306,6 +327,7 @@ const FNS = {
   segment,
   submit,
   uniSelect,
+  onBlurOfReqdInput,
 };
 
 /*************************** Top-Level Code ****************************/
