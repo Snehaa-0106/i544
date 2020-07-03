@@ -154,7 +154,7 @@ function input(meta, path, $element) {
   $div.append($diver)
   $div.append($inp);
   if(meta.required){
-    const $errorDiv = makeElement('div',{"class":"error","id":path+"-err"})
+    const $errorDiv = makeElement('div',{"class":"error","id":id+"-err"})
     $div.append($errorDiv);
     $inp.blur(function () {
       onBlurOfReqdInput(this,meta);
@@ -175,7 +175,6 @@ function onBlurOfReqdInput(ele,meta)
   else
   {
     $(ele).next().text("The field"+meta.text+" must be specified.");
-    //console.log(meta.errMsgFn(Event,meta))
   }
 }
 
@@ -201,6 +200,7 @@ function multiSelect(meta, path, $element) {
   const $label = makeElement("label",{for:id}).text(req)
   $element.append($label)
   const $div = makeElement("div",{})
+  const $errorDiv = makeElement('div',{"class":"error","id":id+"-err"})
   console.log(meta.items.length)
   if (meta.items.length > (N_UNI_SELECT || 4)){
     Object.assign(meta.attr,{multiple:"multiple"})
@@ -228,9 +228,10 @@ function multiSelect(meta, path, $element) {
       $classdiv.append($label)
       $classdiv.append($checkbox)
     }
+    
     $div.append($classdiv)
+    $div.append($errorDiv)
   }
-  // const $select = makeElement("select",meta.attr)
   $element.append($div)
   
 }
@@ -280,6 +281,7 @@ function uniSelect(meta, path, $element) {
   const $label = makeElement("label",{for:id}).text(req)
   $element.append($label)
   const $div = makeElement("div",{})
+   const $error_div = makeElement("div",{"class":"error","id":id+"-err"})
   console.log(meta.items.length)
   if (meta.items.length > (N_UNI_SELECT || 4)){
     const $select = makeElement("select",meta.attr)
@@ -290,6 +292,7 @@ function uniSelect(meta, path, $element) {
       i++
     }
     $div.append($select)
+    $div.append($error_div)
   } 
   else {
     const $classdiv = makeElement('div',{"class":"fieldset"})
