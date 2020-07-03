@@ -95,8 +95,25 @@ function form(meta, path, $element) {
     event.preventDefault();
     const $form = $(this);
     //@TODO
-    // const results = ...;
-    // console.log(JSON.stringify(results, null, 2));
+    const results = $form.serializeArray();
+    let rslt = {};
+    let i=0;
+    while(i<results.length){
+      var aa = $('[name='+results[i].name+']', $form);
+      if($(aa).attr("multiple") || $(aa).attr("type") !== "checkbox") {
+        rslt[results[i].name] = results[i].value;
+      } else {
+        if(!rslt[results[i].name]) {
+            rslt[results[i].name].push(results[i].value);
+            rslt[results[i].name] = [results[i].value];
+           } else {
+             rslt[results[i].name] = [results[i].value];
+             rslt[results[i].name].push(results[i].value);
+           }
+      }
+      i++;
+    }
+    console.log(JSON.stringify(rslt, null, 2));
   });
 }
 
